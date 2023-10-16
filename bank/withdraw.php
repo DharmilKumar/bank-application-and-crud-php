@@ -24,16 +24,18 @@
         $amountErr = "";
         // $id = $_COOKIE['id_cookie'];
         $id = $_SESSION['id_session'];
+        if ($id > 0) {
         if (isset($_POST['submit'])) {
-            if (!empty($_POST['deposit'])) {
+            
 
-                $amount = $_POST['deposit'];
-            } else {
-                $amountErr = "Please Enter Amount!";
-            }
+                if (!empty($_POST['deposit'])) {
 
-            if (!empty($amount)) {
-                if ($id > 0) {
+                    $amount = $_POST['deposit'];
+                } else {
+                    $amountErr = "Please Enter Amount!";
+                }
+
+                if (!empty($amount)) {
 
                     $sql1 = "SELECT * FROM bank WHERE id=$id";
                     $result = mysqli_query($conn, $sql1);
@@ -50,7 +52,7 @@
                             $sql3 = "INSERT INTO bank_history (user_id,name,email,acc,amount,updated_amount,type,r_acc,update_time) VALUES ($id,'$name','$email','$accountNo','$amount','$ab','Withdraw','-','$time');";
 
                             if ($ab < 0) {
-                                echo "<script type='text/javascript'>alert('Your Bank has not enough Money!');window.location='amount_view.php'</script>";
+                                echo "<script type='text/javascript'>alert('Your Bank has not enough Money!');window.location='withdraw.php'</script>";
                             } else {
                                 $sql = "UPDATE bank SET amount=$ab WHERE id=$id";
                                 if ($conn->query($sql) && $conn->query($sql3)) {
@@ -59,10 +61,10 @@
                             }
                         }
                     }
-                } else {
-                    echo "<script type='text/javascript'>alert('Please Login First');window.location='login.php'</script>";
                 }
-            }
+            } 
+        }else {
+            echo "<script type='text/javascript'>alert('Please Login First');window.location='login.php'</script>";
         }
 
         ?>
@@ -74,7 +76,7 @@
                         <input type="number" class="form-control" id="deposit" name="deposit">
                         <span class="w">
                             <?php
-                            echo $amountErr; 
+                            echo $amountErr;
                             ?>
                         </span>
                     </div>

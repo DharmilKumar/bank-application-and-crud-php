@@ -23,43 +23,33 @@
         require_once 'conn.php';
 
         $email = $emailErr = $password = $passwordErr =  "";
-
-        $passReg = '/^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/';
-        $emailReg = '/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/';
-
+        session_start();
+      
         if (isset($_POST['submit'])) {
             if (empty($_POST['email'])) {
                 $emailErr = "Please Enter Email";
             } else {
                 $email = $_POST["email"];
-                if (!preg_match($emailReg, $email)) {
-                    $emailErr = "Please Enter Valid Email";
-                    $email = "";
-                } else {
-                    $email = $_POST["email"];
-                }
             }
             if (empty($_POST['password'])) {
                 $passwordErr = "Please Enter Password";
             } else {
                 $password = $_POST["password"];
-                if (!preg_match($passReg, $password)) {
-                    $passwordErr = "password has minimum 8 length and contains special character!";
-                    $password = "";
-                } else {
-                    $password = $_POST['password'];
-                }
+               
             }
             if (!empty($email) && !empty($password)) {
                 $query = "SELECT email,password,id FROM bank WHERE email='$email'";
                 $result = mysqli_query($conn,$query);
                 $row = mysqli_fetch_assoc($result);
-                $pass_hash = $row['password'];
-                $id = $row['id'];
+                
+                
                 if (mysqli_num_rows($result) > 0) {
+                    $id = $row['id'];
+                    $pass_hash = $row['password'];
+                    $emailTry = $row['email'];
                     $pass_verify = password_verify($password,$pass_hash);
-                    if($pass_verify == $password){
-                        session_start();
+                    if($pass_verify == $password && $emailTry == $email){
+                        
                         $_SESSION['id_session'] = $id;
                         echo "<script type='text/javascript'>alert('Login Successful');window.location='user_nav.php'</script>";
                         // setcookie('id_cookie', "$id", time() + 86400);

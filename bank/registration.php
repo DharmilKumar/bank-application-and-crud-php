@@ -56,7 +56,7 @@
                 $ext = pathinfo($filename, PATHINFO_EXTENSION);
                 $allowed =  array('jpeg', 'jpg', "png", "gif", "bmp", "JPEG", "JPG", "PNG", "GIF", "BMP");
                 if (!in_array($ext, $allowed)) {
-                    $folderErr = ".jpg .jpeg .png only allowed!";
+                    $folderErr = ".jpg .jpeg .png .gif .bmp only allowed!";
                     $folder = "";
                 } else {
                     $folder = "images/" . $filename;
@@ -120,12 +120,10 @@
                     } else {
                         date_default_timezone_set("Asia/Kolkata");
                         $time = date("d-F-Y   h:i:s");
-                        $sql = "INSERT INTO bank(name,image,email,password,contact,acc,update_time) VALUES ('$name','$folder','$email','$hash',$contact,$num,'$time');";
+                        $sql = "INSERT INTO bank(name,image,email,password,contact,acc,amount,update_time) VALUES ('$name','$folder','$email','$hash',$contact,$num,0,'$time');";
 
                         if ($conn->query($sql) == true) {
-                            echo '<script language="javascript">';
-                            echo 'alert("Successfully Inserted");';
-                            echo '</script>';
+                            echo "<script type='text/javascript'>alert('Registration Successful');window.location='login.php'</script>";
                         } else {
                             echo "error while inserting data " . $conn->error;
                         }

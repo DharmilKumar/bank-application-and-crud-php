@@ -22,34 +22,34 @@
         <?php
         require_once 'conn.php';
         $accErr = $amountErr = "";
-        
+
         $accReg = '/^\d{8}$/';
         // $id = $_COOKIE['id_cookie'];
         // session_start();
         $id = $_SESSION['id_session'];
-        if (isset($_POST['submit'])) {
+        if ($id > 0) {
+            if (isset($_POST['submit'])) {
 
-            if (!empty($_POST['acc'])) {
-                $acc = $_POST['acc'];
-                if (!preg_match($accReg, $acc)) {
-                    $accErr = "Account Number is only 8 digits!!";
-                    $acc = "";
-                } else {
+                if (!empty($_POST['acc'])) {
                     $acc = $_POST['acc'];
+                    if (!preg_match($accReg, $acc)) {
+                        $accErr = "Account Number is only 8 digits!!";
+                        $acc = "";
+                    } else {
+                        $acc = $_POST['acc'];
+                    }
+                } else {
+                    $accErr = "Please Enter Account Number";
                 }
-                
-            } else {
-                $accErr = "Please Enter Account Number";
-            }
-            if (!empty($_POST['amm'])) {
+                if (!empty($_POST['amm'])) {
 
-                $amount = $_POST['amm'];
-            } else {
-                $amountErr = "Please Enter Amount";
-            }
+                    $amount = $_POST['amm'];
+                } else {
+                    $amountErr = "Please Enter Amount";
+                }
 
-            if(!empty($acc) && !empty($amount)){
-                if ($id > 0) {
+                if (!empty($acc) && !empty($amount)) {
+
                     $sql1 = "SELECT * FROM bank WHERE id=$id";
                     $result = mysqli_query($conn, $sql1);
                     if ($result->num_rows > 0) {
@@ -59,40 +59,38 @@
                             $name = $row['name'];
                             $email = $row['email'];
                             $accountNo = $row['acc'];
-    
+
                             date_default_timezone_set("Asia/Kolkata");
                             $time = date("d-F-Y   h:i:s");
                             $sql4 = "INSERT INTO bank_history (user_id,name,email,acc,amount,updated_amount,type,r_acc,update_time) VALUES ($id,'$name','$email','$accountNo','$amount','$ab','Send Amount','$acc','$time');";
-    
-                            if ($ab < 0) {
-                                echo "<script type='text/javascript'>alert('Your Bank has not enough Money!');window.location='send_amount.php'</script>";
-                            } else {
-                                //for acc no of another user
-                                $sql2 = "SELECT amount FROM bank WHERE acc=$acc";
-                                $result2 = mysqli_query($conn, $sql2);
-                                if ($result2->num_rows > 0) {
+
+
+                            //for acc no of another user
+                            $sql2 = "SELECT amount FROM bank WHERE acc=$acc";
+                            $result2 = mysqli_query($conn, $sql2);
+                            if ($result2->num_rows > 0) {
+                                if ($ab < 0) {
+                                    echo "<script type='text/javascript'>alert('Your Bank has not enough Money!');window.location='send_amount.php'</script>";
+                                } else {
                                     while ($row2 = $result2->fetch_assoc()) {
                                         $amount2 = $row2['amount'];
                                         $add = $amount + $amount2;
                                         $sql = "UPDATE bank SET amount=$ab WHERE id=$id";
                                         $sql3 = "UPDATE bank SET amount=$add WHERE acc=$acc";
                                         if ($conn->query($sql) && $conn->query($sql3) && $conn->query($sql4)) {
-                                            echo "<script type='text/javascript'>alert('Amount Send!');window.location='send_amount.php'</script>";
+                                            echo "<script type='text/javascript'>alert('Amount Send!');window.location='send_amount.php'</scrip>";
                                         }
                                     }
-                                } else {
-                                    echo "<script type='text/javascript'>alert('Account not Found!');window.location='send_amount.php'</script>";
                                 }
+                            } else {
+                                echo "<script type='text/javascript'>alert('Account not Found!');window.location='send_amount.php'</script>";
                             }
                         }
                     }
-                } else {
-                    echo "<script type='text/javascript'>alert('Please Login First');window.location='login.php'</script>";
                 }
             }
-
-
-            
+        } else {
+            echo "<script type='text/javascript'>alert('Please Login First');window.location='login.php'</script>";
         }
 
         ?>
@@ -102,12 +100,12 @@
                     <div class="mb-3">
                         <label for="acc" class="form-label">Enter Account No</label>
                         <input type="number" class="form-control" id="acc" name="acc">
-                        <span class="w"><?php echo $accErr;?></span>
+                        <span class="w"><?php echo $accErr; ?></span>
                     </div>
                     <div class="mb-3">
                         <label for="amm" class="form-label">Enter Amount</label>
                         <input type="number" class="form-control" id="amm" name="amm">
-                        <span class="w"><?php echo $amountErr;?></span>
+                        <span class="w"><?php echo $amountErr; ?></span>
                     </div>
                     <button type="submit" name="submit" class="btn btn-primary">Send</button>
                 </form>

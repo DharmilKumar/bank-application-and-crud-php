@@ -3,7 +3,7 @@
 
 <head>
     <style>
-        .w{
+        .w {
             color: red;
         }
     </style>
@@ -25,15 +25,16 @@
         // $id = $_COOKIE['id_cookie'];
         // session_start();
         $id = $_SESSION['id_session'];
-        if (isset($_POST['submit'])) {
-            if(!empty($_POST['deposit'])){
-                $amount = $_POST['deposit'];
-            }else{
-                $amountErr = "Please Enter Amount";
-            }
+        if ($id > 0) {
+            if (isset($_POST['submit'])) {
+                if (!empty($_POST['deposit'])) {
+                    $amount = $_POST['deposit'];
+                } else {
+                    $amountErr = "Please Enter Amount";
+                }
 
-            if(!empty($amount)){
-                if ($id > 0) {
+                if (!empty($amount)) {
+
 
                     $sql1 = "SELECT * FROM bank WHERE id=$id";
                     $result = mysqli_query($conn, $sql1);
@@ -44,11 +45,11 @@
                             $name = $row['name'];
                             $email = $row['email'];
                             $accountNo = $row['acc'];
-    
+
                             date_default_timezone_set("Asia/Kolkata");
                             $time = date("d-F-Y   h:i:s");
                             $sql3 = "INSERT INTO bank_history (user_id,name,email,acc,amount,updated_amount,type,r_acc,update_time) VALUES ($id,'$name','$email','$accountNo','$amount','$ab','Deposit','-','$time');";
-                            
+
                             $sql = "UPDATE bank SET amount=$ab,update_time='$time' WHERE id=$id";
                             if ($conn->query($sql) && $conn->query($sql3)) {
                                 echo "<script type='text/javascript'>alert('Amount Added!');window.location='deposit.php'</script>";
@@ -57,14 +58,10 @@
                             }
                         }
                     }
-                } else {
-                    echo "<script type='text/javascript'>alert('Please Login First');window.location='login.php'</script>";
                 }
-
-
             }
-
-            
+        } else {
+            echo "<script type='text/javascript'>alert('Please Login First');window.location='login.php'</script>";
         }
 
         ?>
@@ -74,7 +71,7 @@
                     <div class="mb-3">
                         <label for="deposit" class="form-label">Enter Deposit Amount</label>
                         <input type="number" class="form-control" id="deposit" name="deposit">
-                        <span class="w"><?php echo $amountErr;?></span>
+                        <span class="w"><?php echo $amountErr; ?></span>
                     </div>
                     <button type="submit" name="submit" class="btn btn-primary">Add Amount</button>
                 </form>
