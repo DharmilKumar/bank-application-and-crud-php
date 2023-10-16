@@ -29,6 +29,10 @@
             if (isset($_POST['submit'])) {
                 if (!empty($_POST['deposit'])) {
                     $amount = $_POST['deposit'];
+                    if($amount<0){
+                        $amountErr = "Please Enter Valid Amount";
+                        $amount = "";
+                    }
                 } else {
                     $amountErr = "Please Enter Amount";
                 }

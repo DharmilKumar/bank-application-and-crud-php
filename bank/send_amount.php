@@ -23,7 +23,6 @@
         require_once 'conn.php';
         $accErr = $amountErr = "";
 
-        $accReg = '/^\d{8}$/';
         // $id = $_COOKIE['id_cookie'];
         // session_start();
         $id = $_SESSION['id_session'];
@@ -32,12 +31,6 @@
 
                 if (!empty($_POST['acc'])) {
                     $acc = $_POST['acc'];
-                    if (!preg_match($accReg, $acc)) {
-                        $accErr = "Account Number is only 8 digits!!";
-                        $acc = "";
-                    } else {
-                        $acc = $_POST['acc'];
-                    }
                 } else {
                     $accErr = "Please Enter Account Number";
                 }
@@ -66,7 +59,7 @@
 
 
                             //for acc no of another user
-                            $sql2 = "SELECT amount FROM bank WHERE acc=$acc";
+                            $sql2 = "SELECT * FROM bank WHERE acc=$acc";
                             $result2 = mysqli_query($conn, $sql2);
                             if ($result2->num_rows > 0) {
                                 if ($ab < 0) {
@@ -74,11 +67,18 @@
                                 } else {
                                     while ($row2 = $result2->fetch_assoc()) {
                                         $amount2 = $row2['amount'];
+                                        $id2 = $row2['id'];
+                                        $name2 = $row2['name'];
+                                        $email2 = $row2['email'];
+                                        $acc2 = $row2['acc'];
                                         $add = $amount + $amount2;
+                                        $sql5 =  "INSERT INTO bank_history(user_id,name,email,acc,amount,updated_amount,type,s_acc,update_time) VALUES ($id2,'$name2','$email2','$acc2','$amount','$add','Received Amount','$accountNo','$time');";
                                         $sql = "UPDATE bank SET amount=$ab WHERE id=$id";
                                         $sql3 = "UPDATE bank SET amount=$add WHERE acc=$acc";
-                                        if ($conn->query($sql) && $conn->query($sql3) && $conn->query($sql4)) {
-                                            echo "<script type='text/javascript'>alert('Amount Send!');window.location='send_amount.php'</scrip>";
+                                        if ($conn->query($sql) && $conn->query($sql3) && $conn->query($sql4) && $conn->query($sql5)) {
+                                            echo "<script type='text/javascript'>alert('Amount Sent');window.location='send_amount.php'</script>";
+                                        }else{
+                                            echo $conn->error;
                                         }
                                     }
                                 }
