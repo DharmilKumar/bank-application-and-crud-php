@@ -74,8 +74,8 @@
     <table class="table mx-auto mt-5" style="width: 35rem;">
         <thead>
             <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
+                <th scope="col">To</th>
+                <th scope="col">His Email</th>
                 <th scope="col">Account Number</th>
                 <th scope="col">Amount</th>
                 <th scope="col">Total Amount</th>

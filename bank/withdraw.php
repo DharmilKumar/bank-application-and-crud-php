@@ -34,9 +34,8 @@
                     if($amount<0){
                         $amountErr = "Please Enter Valid Amount";
                         $amount = "";
-                    }elseif($amount>10000){
-                        $amountErr = "Limit is 10k only";
-                        $amount = "";
+                    }else{
+                        $amount = $_POST['deposit'];
                     }
                 } else {
                     $amountErr = "Please Enter Amount!";

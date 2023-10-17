@@ -55,8 +55,7 @@
 
                             date_default_timezone_set("Asia/Kolkata");
                             $time = date("d-F-Y   h:i:s");
-                            $sql4 = "INSERT INTO bank_history (user_id,name,email,acc,amount,updated_amount,type,r_acc,update_time) VALUES ($id,'$name','$email','$accountNo','$amount','$ab','Send Amount','$acc','$time');";
-
+                            
 
                             //for acc no of another user
                             $sql2 = "SELECT * FROM bank WHERE acc=$acc";
@@ -72,7 +71,10 @@
                                         $email2 = $row2['email'];
                                         $acc2 = $row2['acc'];
                                         $add = $amount + $amount2;
-                                        $sql5 =  "INSERT INTO bank_history(user_id,name,email,acc,amount,updated_amount,type,s_acc,update_time) VALUES ($id2,'$name2','$email2','$acc2','$amount','$add','Received Amount','$accountNo','$time');";
+                                        // echo $name2." ".$email2. " ".$acc2. " ";die;
+                                        $sql4 = "INSERT INTO bank_history (user_id,name,email,acc,amount,updated_amount,type,r_acc,update_time) VALUES ($id,'$name2','$email2','$accountNo','$amount','$ab','Send Amount','$acc','$time');";
+
+                                        $sql5 =  "INSERT INTO bank_history(user_id,name,email,acc,amount,updated_amount,type,s_acc,update_time) VALUES ($id2,'$name','$email','$acc','$amount','$add','Received Amount','$accountNo','$time');";
                                         $sql = "UPDATE bank SET amount=$ab WHERE id=$id";
                                         $sql3 = "UPDATE bank SET amount=$add WHERE acc=$acc";
                                         if ($conn->query($sql) && $conn->query($sql3) && $conn->query($sql4) && $conn->query($sql5)) {

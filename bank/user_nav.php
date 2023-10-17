@@ -24,21 +24,26 @@
     // $id = $_COOKIE['id_cookie'];
     session_start();
     $id = $_SESSION['id_session'];
-    $sql = "SELECT acc,amount,name FROM bank WHERE id = $id";
-    $result = mysqli_query($conn, $sql);
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $accNo = $row['acc'];
-            $name = $row['name'];
-            $balance = $row['amount'];
+    if ($id > 0) {
+        $sql = "SELECT acc,amount,name FROM bank WHERE id = $id";
+        $result = mysqli_query($conn, $sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $accNo = $row['acc'];
+                $name = $row['name'];
+                $balance = $row['amount'];
+            }
         }
-    }
 
 
-    if (isset($_POST['id'])) {
-        session_destroy();
-        echo "<script type='text/javascript'>window.location='login.php'</script>";
+        if (isset($_POST['id'])) {
+            session_destroy();
+            echo "<script type='text/javascript'>window.location='login.php'</script>";
+        }
+    } else {
+        echo "<script type='text/javascript'>alert('Please Login First');window.location='login.php'</script>";
     }
+
     ?>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -66,7 +71,7 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="send_amount.php">Send Amount</a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a class="nav-link active" href="history.php">History</a>
                     </li>
